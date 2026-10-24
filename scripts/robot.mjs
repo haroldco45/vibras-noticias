@@ -8,11 +8,14 @@
 import { readFile, writeFile } from 'node:fs/promises';
 
 const ARCHIVO = 'noticias.json';
-const MAX_NOTICIAS = 260;
+const MAX_NOTICIAS = 380;
+const SECCIONES_FIJAS = ['Bajo Cauca', 'Farándula', 'Cine', 'Deportes']; // siempre se guardan aunque sean más viejas
+const POR_SECCION = 30;
+const DIAS_SECCION = 15;
 const DIAS_MAX = 7;
 const MAX_VIDEOS = 48;
 const DIAS_VIDEOS = 5;
-const MAX_FOTOS_POR_CORRIDA = 60;
+const MAX_FOTOS_POR_CORRIDA = 90;
 
 // 1. Google Noticias Colombia por tema
 const TEMAS = [
@@ -24,6 +27,22 @@ const TEMAS = [
   { tema: 'Economía', q: 'dólar OR economía OR DANE OR "Banco de la República" Colombia' },
   { tema: 'Regiones', q: 'Antioquia OR Córdoba OR Sucre OR "Bajo Cauca" OR Urabá gobernador alcalde' },
   { tema: 'Deportes', q: '"Selección Colombia" OR "Liga BetPlay" OR ciclismo Colombia' },
+  { tema: 'Farándula', q: 'farándula Colombia OR "Casa de los Famosos" OR "Karol G" OR Shakira OR Maluma OR "J Balvin" OR Feid' },
+  { tema: 'Cine', q: 'cine colombiano OR película OR estreno OR Netflix OR taquilla OR "festival de cine" Colombia' },
+  { tema: 'Bajo Cauca', q: 'Caucasia OR "Bajo Cauca" OR Nechí OR Cáceres Antioquia OR "El Bagre" OR Zaragoza Antioquia OR Tarazá', dias: 10 },
+];
+
+// 1b. Bing Noticias: trae el enlace directo y foto de cada nota. Sirve para las secciones con pocas noticias.
+const BING = [
+  { tema: 'Bajo Cauca', q: 'Caucasia Antioquia' },
+  { tema: 'Bajo Cauca', q: '"Bajo Cauca"' },
+  { tema: 'Bajo Cauca', q: 'Nechí OR "El Bagre" OR Tarazá OR Cáceres Antioquia' },
+  { tema: 'Farándula', q: 'farándula Colombia' },
+  { tema: 'Farándula', q: 'famosos colombianos' },
+  { tema: 'Cine', q: 'cine Colombia estreno' },
+  { tema: 'Cine', q: 'películas estrenos cine' },
+  { tema: 'Deportes', q: 'Selección Colombia' },
+  { tema: 'Deportes', q: 'Liga BetPlay' },
 ];
 
 // 2. Medios colombianos con foto en su RSS. Si alguno falla, el robot sigue con los demás.
@@ -45,6 +64,22 @@ const MEDIOS = [
   { medio: 'La Silla Vacía', url: 'https://www.lasillavacia.com/feed/' },
   { medio: 'Kienyke', url: 'https://www.kienyke.com/feed' },
   { medio: 'Cambio', url: 'https://cambiocolombia.com/rss.xml' },
+  // Farándula, cine, deportes y Antioquia
+  { medio: 'Infobae Colombia', tema: 'Farándula', url: 'https://www.infobae.com/arc/outboundfeeds/rss/category/colombia/entretenimiento/' },
+  { medio: 'Semana', tema: 'Farándula', url: 'https://www.semana.com/arc/outboundfeeds/rss/category/gente/?outputType=xml' },
+  { medio: 'Semana', tema: 'Deportes', url: 'https://www.semana.com/arc/outboundfeeds/rss/category/deportes/?outputType=xml' },
+  { medio: 'Semana', tema: 'Cine', url: 'https://www.semana.com/arc/outboundfeeds/rss/category/cultura/?outputType=xml' },
+  { medio: 'El Tiempo', tema: 'Cine', url: 'https://www.eltiempo.com/rss/cultura.xml' },
+  { medio: 'El Tiempo', tema: 'Deportes', url: 'https://www.eltiempo.com/rss/deportes.xml' },
+  { medio: 'El Tiempo', tema: 'Cine', url: 'https://www.eltiempo.com/arc/outboundfeeds/rss/category/cultura/?outputType=xml' },
+  { medio: 'El Espectador', tema: 'Farándula', url: 'https://www.elespectador.com/arc/outboundfeeds/rss/category/entretenimiento/?outputType=xml' },
+  { medio: 'El Espectador', tema: 'Deportes', url: 'https://www.elespectador.com/arc/outboundfeeds/rss/category/deportes/?outputType=xml' },
+  { medio: 'Caracol TV', tema: 'Farándula', url: 'https://www.caracoltv.com/arc/outboundfeeds/rss/?outputType=xml' },
+  { medio: 'Canal RCN', tema: 'Farándula', url: 'https://www.canalrcn.com/arc/outboundfeeds/rss/?outputType=xml' },
+  { medio: 'Pulzo', tema: 'Farándula', url: 'https://www.pulzo.com/rss/entretenimiento' },
+  { medio: 'El Colombiano', tema: 'Antioquia', url: 'https://www.elcolombiano.com/rss/antioquia.xml' },
+  { medio: 'El Colombiano', tema: 'Antioquia', url: 'https://www.elcolombiano.com/arc/outboundfeeds/rss/category/antioquia/?outputType=xml' },
+  { medio: 'Teleantioquia', tema: 'Antioquia', url: 'https://www.teleantioquia.co/feed/' },
 ];
 
 // 4. Noticieros colombianos en YouTube (el robot averigua solo el código de cada canal)
@@ -149,8 +184,31 @@ const reporte = {};
 async function titularesGoogle() {
   const res = await enParalelo(TEMAS, 4, async t => {
     const url = t.url || `https://news.google.com/rss/search?q=${encodeURIComponent(t.q + ' when:2d')}&hl=es-419&gl=CO&ceid=CO:es-419`;
-    try { const l = parsearRSS(await traer(url), { tema: t.tema }).slice(0, 40); reporte['google:' + t.tema] = l.length; return l; }
+    const urlF = t.url || url.replace(' when:2d', ` when:${t.dias || 2}d`);
+    try { const l = parsearRSS(await traer(urlF), { tema: t.tema }).slice(0, 40); reporte['google:' + t.tema] = l.length; return l; }
     catch (e) { reporte['google:' + t.tema] = e.message; return []; }
+  });
+  return res.flat();
+}
+
+export function parsearBing(xml, tema) {
+  return xml.split('<item>').slice(1).map(b => {
+    let enlace = etiqueta(b, 'link');
+    const u = enlace.match(/[?&]url=([^&]+)/); if (u) enlace = decodeURIComponent(u[1]);
+    let imagen = imagenValida(etiqueta(b, 'News:Image'));
+    if (imagen && imagen.includes('bing.com/th')) imagen += (imagen.includes('?') ? '&' : '?') + 'w=700&h=420&c=7';
+    const fecha = new Date(etiqueta(b, 'pubDate'));
+    const res = corto(sinHtml(etiqueta(b, 'description')));
+    return { titulo: sinHtml(etiqueta(b, 'title')), enlace, fuente: etiqueta(b, 'News:Source') || new URL(enlace).hostname.replace(/^www\./, ''),
+      fecha: isNaN(fecha) ? null : fecha.toISOString(), tema, ...(imagen ? { imagen } : {}), ...(res.length > 30 ? { resumen: res } : {}) };
+  }).filter(n => n.titulo && /^https?:\/\//.test(n.enlace) && !n.enlace.includes('bing.com') && n.fecha);
+}
+
+async function noticiasBing() {
+  const res = await enParalelo(BING, 3, async b => {
+    const url = `https://www.bing.com/news/search?q=${encodeURIComponent(b.q)}&format=rss&setlang=es&cc=CO&mkt=es-CO`;
+    try { const l = parsearBing(await traer(url), b.tema).slice(0, 25); reporte['bing:' + b.q] = `${l.length} notas, ${l.filter(n => n.imagen).length} con foto`; return l; }
+    catch (e) { reporte['bing:' + b.q] = e.message; return []; }
   });
   return res.flat();
 }
@@ -158,7 +216,7 @@ async function titularesGoogle() {
 async function noticiasConFoto() {
   const res = await enParalelo(MEDIOS, 5, async m => {
     try {
-      const l = parsearRSS(await traer(m.url), { fuente: m.medio, conFoto: true }).slice(0, 30);
+      const l = parsearRSS(await traer(m.url), { fuente: m.medio, conFoto: true, tema: m.tema || '' }).slice(0, 30);
       reporte['medio:' + m.medio + ' ' + new URL(m.url).pathname.slice(0, 30)] = `${l.length} notas, ${l.filter(n => n.imagen).length} con foto`;
       return l;
     } catch (e) { reporte['medio:' + m.medio + ' ' + new URL(m.url).pathname.slice(0, 30)] = e.message; return []; }
@@ -209,14 +267,15 @@ async function main() {
   let previo = { noticias: [], videos: [], canales: {} };
   try { previo = JSON.parse(await readFile(ARCHIVO, 'utf8')); } catch {}
 
-  const [google, medios, yt] = await Promise.all([titularesGoogle(), noticiasConFoto(), videosNoticieros(previo.canales || {})]);
+  const [google, medios, bing, yt] = await Promise.all([titularesGoogle(), noticiasConFoto(), noticiasBing(), videosNoticieros(previo.canales || {})]);
 
   // Unir noticias: las de medios (con foto) primero para que ganen en los duplicados
   const limite = Date.now() - DIAS_MAX * 86400000;
   const fotoPrevia = new Map((previo.noticias || []).filter(n => n.imagen || n.sinFoto).map(n => [n.enlace, n]));
   const mapa = new Map();
-  for (const n of [...medios, ...google, ...(previo.noticias || [])]) {
-    if (new Date(n.fecha).getTime() < limite || new Date(n.fecha).getTime() > Date.now() + 3600000) continue;
+  const limiteSeccion = Date.now() - DIAS_SECCION * 86400000;
+  for (const n of [...medios, ...bing, ...google, ...(previo.noticias || [])]) {
+    if (new Date(n.fecha).getTime() < (SECCIONES_FIJAS.includes(n.tema) ? limiteSeccion : limite) || new Date(n.fecha).getTime() > Date.now() + 3600000) continue;
     const k = clave(n.titulo);
     const ya = mapa.get(k);
     if (!ya) {
@@ -228,7 +287,14 @@ async function main() {
       if (!ya.resumen && n.resumen) ya.resumen = n.resumen;
     }
   }
-  const noticias = [...mapa.values()].sort((a, b) => new Date(b.fecha) - new Date(a.fecha)).slice(0, MAX_NOTICIAS);
+  const ordenadas = [...mapa.values()].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+  const noticias = ordenadas.slice(0, MAX_NOTICIAS);
+  // Las secciones pequeñas (Bajo Cauca, farándula, cine, deportes) no se pierden entre tanta política
+  for (const sec of SECCIONES_FIJAS) {
+    const ya = noticias.filter(n => n.tema === sec).length;
+    noticias.push(...ordenadas.slice(MAX_NOTICIAS).filter(n => n.tema === sec).slice(0, Math.max(0, POR_SECCION - ya)));
+  }
+  noticias.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
   // 3. Buscar la foto de las notas recientes que no la traen (solo enlaces directos al medio)
   const faltan = noticias.filter(n => !n.imagen && !n.sinFoto && !n.enlace.includes('news.google.com')).slice(0, MAX_FOTOS_POR_CORRIDA);

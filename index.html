@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Vibras Noticias · Colombia al minuto</title>
-<meta name="description" content="Las noticias de Colombia al minuto, con fotos y videos reales de los medios del país. Software por Vibras Positivas HM.">
+<meta name="description" content="Las noticias de Colombia al minuto: Bajo Cauca, farándula, deportes, cine y actualidad, con fotos y videos reales. Software por Vibras Positivas HM.">
 <meta name="theme-color" content="#060912">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
@@ -124,7 +124,7 @@ img{display:block}
 .grid{display:flex;flex-direction:column}
 .col{display:contents}
 .sec{margin-bottom:26px}
-#sec-hoy{order:1} #sec-videos{order:2} #sec-fotos{order:3} #sec-noticias{order:4}
+#sec-hoy{order:1} #sec-bc{order:2} #sec-videos{order:3} #sec-secciones{order:4} #sec-fotos{order:5} #sec-noticias{order:6}
 .sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px}
 .sec-h h2{font:900 13px 'Archivo',system-ui,sans-serif;letter-spacing:.17em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
 .sec-h h2 .vivo-dot{width:8px;height:8px;border-radius:50%;background:var(--rojo);animation:late 1.2s infinite}
@@ -205,6 +205,37 @@ details.otros[open] summary svg{transform:rotate(180deg)}
 .foto span{position:absolute;left:0;right:0;bottom:0;padding:18px 7px 6px;font:700 10px/1.25 'Archivo',system-ui,sans-serif;background:linear-gradient(180deg,transparent,rgba(0,0,0,.85));display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .foto:first-child span{font-size:12.5px;padding:30px 10px 9px}
 
+/* tarjetas con foto (Bajo Cauca y secciones) */
+.tarjetas{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.tarj{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;animation:entra .45s ease-out both;transition:transform .15s,border-color .2s}
+.tarj:hover{border-color:var(--c)}
+.tarj:active{transform:scale(.97)}
+.tarj .ft{position:relative;aspect-ratio:16/10;overflow:hidden;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 45%,#0e1424),#0e1424)}
+.tarj .ft img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.tarj:hover .ft img{transform:scale(1.06)}
+.tarj .ft .credito{position:absolute;right:6px;bottom:6px;font-size:8.5px}
+.tarj .ft .letra{position:absolute;inset:0;display:grid;place-items:center;font:900 italic 34px 'Archivo',system-ui,sans-serif;color:rgba(255,255,255,.18)}
+.tarj .ft::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--c)}
+.tarj .tx{padding:9px 10px 11px;display:flex;flex-direction:column;gap:7px;flex:1}
+.tarj h3{font:700 13.5px/1.3 'Archivo',system-ui,sans-serif;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.tarj .meta{font-size:10.5px;margin-top:auto}
+.tarj.grande{grid-column:1/-1}
+.tarj.grande .ft{aspect-ratio:16/8}
+.tarj.grande h3{font-size:17px;-webkit-line-clamp:3}
+.bc{border-radius:var(--r);padding:14px;background:linear-gradient(160deg,rgba(163,230,53,.12),var(--panel) 55%);border:1px solid #2f4219}
+.bc-cab{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.bc-cab p{font-size:12.5px;color:var(--muted);line-height:1.4}
+.bc-cab b{color:#a3e635}
+.bc-cab .btn-ic{flex:none;border-color:#3b5320}
+.pestanas{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 12px;padding:0 16px}
+.pestanas::-webkit-scrollbar{display:none}
+.pestanas button{flex:none;font:800 12px 'Archivo',system-ui,sans-serif;padding:8px 13px;border-radius:12px;border:1px solid var(--line2);color:var(--muted);transition:all .2s;display:flex;gap:6px;align-items:center}
+.pestanas button i{width:7px;height:7px;border-radius:50%;background:var(--c)}
+.pestanas button.on{background:var(--c);color:#0a0d16;border-color:var(--c)}
+.pestanas button.on i{background:#0a0d16}
+.ver-todo{display:block;width:100%;margin-top:10px;padding:11px;border-radius:12px;border:1px solid var(--line2);font:800 12px 'Archivo',system-ui,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:var(--txt)}
+.ver-todo:hover{border-color:var(--c)}
+
 /* buscador */
 .buscar{display:flex;gap:8px;margin-bottom:12px}
 .buscar input{flex:1;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;color:var(--txt);font:500 14px 'Archivo',system-ui,sans-serif;outline:none}
@@ -247,6 +278,8 @@ footer .nota-f{font:400 11px/1.5 'Archivo',system-ui,sans-serif;letter-spacing:0
   .chips{margin:0 0 22px;padding:2px 0;flex-wrap:wrap}
   .hoy{padding:18px 20px}
   .lista{padding:8px 20px}
+  .tarjetas{grid-template-columns:repeat(3,1fr)}
+  .pestanas{margin:0 0 12px;padding:0;flex-wrap:wrap}
 }
 </style>
 </head>
@@ -301,10 +334,27 @@ footer .nota-f{font:400 11px/1.5 'Archivo',system-ui,sans-serif;letter-spacing:0
         </div>
       </section>
 
+      <section class="sec" id="sec-bc">
+        <div class="sec-h"><h2><span class="vivo-dot" style="background:#a3e635"></span>Bajo Cauca al día</h2><small id="bc-txt"></small></div>
+        <div class="bc">
+          <div class="bc-cab"><p><b>Caucasia, Nechí, El Bagre, Cáceres, Zaragoza y Tarazá.</b> Lo que pasa en nuestra región.</p>
+            <button class="btn-ic" id="bc-buscar" aria-label="Buscar más del Bajo Cauca"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M21 21l-4.3-4.3M11 18a7 7 0 100-14 7 7 0 000 14z"/></svg></button></div>
+          <div class="tarjetas" id="bc-lista"><div class="sk"></div></div>
+          <button class="ver-todo" id="bc-todo" style="--c:#a3e635" hidden>Ver todo el Bajo Cauca</button>
+        </div>
+      </section>
+
+      <section class="sec" id="sec-secciones">
+        <div class="sec-h"><h2>Secciones</h2><small id="sec-txt"></small></div>
+        <div class="pestanas" id="pestanas"></div>
+        <div class="tarjetas" id="sec-lista"></div>
+        <button class="ver-todo" id="sec-todo" hidden></button>
+      </section>
+
       <section class="sec" id="sec-noticias">
         <div class="sec-h"><h2 id="lista-titulo">Todas las noticias</h2><small id="total-txt"></small></div>
         <form class="buscar" id="form-buscar">
-          <input id="q" type="search" placeholder="Buscar: Caucasia, dólar, Senado, Selección…" autocomplete="off" enterkeyhint="search">
+          <input id="q" type="search" placeholder="Buscar: Caucasia, Karol G, Nacional, película…" autocomplete="off" enterkeyhint="search">
           <button type="submit">Buscar</button>
         </form>
         <div class="lista" id="lista"><div class="sk"></div><div class="sk" style="width:60%"></div></div>
@@ -349,15 +399,22 @@ const $ = s => document.querySelector(s);
 // Temas: palabras con las que se reconoce cada noticia, su color y la búsqueda en vivo.
 const TEMAS = [
   { t:'Todas', c:'#fcd116' },
+  { t:'Bajo Cauca', c:'#a3e635', p:['caucasia','bajo cauca','nechi','el bagre','taraza'], q:'Caucasia OR "Bajo Cauca" OR Nechí OR "El Bagre" OR Tarazá', dias:7 },
+  { t:'Farándula', c:'#f472b6', p:['farandula','famos','cantante','reguet','reggaeton','karol g','shakira','maluma','j balvin','feid','casa de los famosos','desafio','reality','influencer','telenovela','presentador','actriz','romance','concierto','artista'], q:'farándula Colombia OR famosos OR "Karol G" OR Shakira OR Maluma' },
+  { t:'Deportes', c:'#22d3ee', p:['seleccion colombia','futbol','liga betplay','gol ','goles','ciclis','tenis','millonarios','atletico nacional','america de cali','junior','mundial','tour de','olimpic','boxeo','james rodriguez','luis diaz','copa libertadores','partido','dimayor'], q:'"Selección Colombia" OR "Liga BetPlay" OR ciclismo Colombia' },
+  { t:'Cine', c:'#f87171', p:[' cine','pelicula','estreno','taquilla','netflix','premios oscar','festival de cine','documental','trailer','cineasta','largometraje','hbo','disney+','prime video','series'], q:'cine colombiano OR película OR estreno OR Netflix Colombia' },
   { t:'Gobierno', c:'#fcd116', p:['espriella','gobierno nacional','presidente','ministr','casa de narino','vicepresident','gabinete'], q:'"Abelardo de la Espriella" OR "Casa de Nariño" OR ministro Colombia' },
-  { t:'Congreso', c:'#60a5fa', p:['senado','senador','camara de representantes','congres','representante a la camara','plenaria','proyecto de ley','reforma'], q:'Senado OR "Cámara de Representantes" Colombia' },
+  { t:'Congreso', c:'#60a5fa', p:['senado','senador','camara de representantes','congres','representante a la camara','plenaria','proyecto de ley'], q:'Senado OR "Cámara de Representantes" Colombia' },
   { t:'Orden público', c:'#34d399', p:['policia','ejercito','militar','fuerza publica','armada','soldado','atentado','ataque','disidencia','eln','clan del golfo','masacre','homicid','secuestr','explosivo','combate'], q:'"Policía Nacional" OR Ejército OR atentado Colombia' },
   { t:'Justicia', c:'#a78bfa', p:['fiscal','corte','procurad','juez','captur','extradi','condena','imputa','contralor','jep','carcel'], q:'Fiscalía OR "Corte Suprema" OR Procuraduría Colombia' },
   { t:'Economía', c:'#fb923c', p:['dolar','economia','inflacion','dane','banco de la republica','gasolina','salario','empleo','impuesto','tributari','petroleo','ecopetrol','precio','pension','tasa de interes'], q:'dólar OR economía OR DANE Colombia' },
-  { t:'Regiones', c:'#f472b6', p:['antioquia','medellin','cordoba','monteria','sucre','sincelejo','caucasia','bajo cauca','uraba','barranquilla','cartagena','cali ','santa marta','bucaramanga','choco','gobernador','alcalde','alcaldia','gobernacion'], q:'Antioquia OR Córdoba OR Sucre OR "Bajo Cauca" OR Urabá' },
-  { t:'Deportes', c:'#22d3ee', p:['seleccion colombia','futbol','liga betplay','gol ','goles','ciclis','tenis','millonarios','atletico nacional','america de cali','junior','mundial','tour de','olimpic','boxeo','james rodriguez','luis diaz'], q:'"Selección Colombia" OR "Liga BetPlay" OR ciclismo Colombia' },
+  { t:'Regiones', c:'#94a3b8', p:['antioquia','medellin','cordoba','monteria','sucre','sincelejo','uraba','barranquilla','cartagena','cali ','santa marta','bucaramanga','choco','gobernador','alcalde','alcaldia','gobernacion'], q:'Antioquia OR Córdoba OR Sucre OR Urabá alcalde gobernador' },
 ];
-const ORDEN_TEMAS = ['Deportes','Orden público','Justicia','Congreso','Economía','Gobierno','Regiones'];
+const ORDEN_TEMAS = ['Bajo Cauca','Deportes','Cine','Farándula','Orden público','Justicia','Congreso','Economía','Gobierno','Regiones'];
+// Secciones que muestran tarjetas con foto (además de Bajo Cauca, que tiene su propio bloque)
+const SECCIONES = ['Farándula','Deportes','Cine','Economía','Regiones','Orden público','Justicia','Congreso','Gobierno'];
+// Si el robot trajo la noticia desde una sección (feed de farándula, búsqueda de Caucasia…), esa sección manda
+const SECCION_FUERTE = ['Bajo Cauca','Farándula','Cine','Deportes'];
 const VIVO_GENERAL = ['Colombia "última hora"', 'Colombia noticias hoy'];
 
 let noticias = [];
@@ -390,10 +447,11 @@ function plural(n, s, p){ return `${n} ${n===1?s:(p||s+'s')}` }
 function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('ver'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('ver'),2600) }
 function estado(txt, tipo){ $('#estado-txt').textContent = txt; $('#punto').className = 'punto ' + (tipo||'') }
 function temaDe(n){
+  if (SECCION_FUERTE.includes(n.tema)) return n.tema;
   const t = ' ' + sinTildes(n.titulo + ' ' + (n.resumen||'')) + ' ';
   const hit = ORDEN_TEMAS.map(x => TEMAS.find(y => y.t === x)).find(x => x.p.some(w => t.includes(w)));
   if (hit) return hit.t;
-  const alias = { 'Fuerza Pública':'Orden público' };
+  const alias = { 'Fuerza Pública':'Orden público', 'Antioquia':'Regiones' };
   const tt = alias[n.tema] || n.tema;
   return TEMAS.some(x => x.t === tt && x.t !== 'Todas') ? tt : null;
 }
@@ -453,7 +511,7 @@ async function rssEnVivo(consulta, temaRss=''){
 async function buscarEnVivo(extra=''){
   if (extra) return rssEnVivo(`${extra} Colombia when:7d`);
   const cons = [...VIVO_GENERAL.map(q => [q,'']), ...TEMAS.filter(t => t.q).map(t => [t.q, t.t])];
-  const res = await Promise.all(cons.map(([q,t]) => rssEnVivo(`${q} when:1d`, t)));
+  const res = await Promise.all(cons.map(([q,t]) => rssEnVivo(`${q} when:${(TEMAS.find(x => x.t === t)||{}).dias||1}d`, t)));
   return res.flat();
 }
 function fusionar(...listas){
@@ -552,7 +610,8 @@ function pintarPortada(grupos){
   const conFoto = grupos.filter(g => g.imagen && Date.now() - g.fecha < 30 * 3600000);
   const base = conFoto.length >= 3 ? conFoto : grupos.filter(g => g.imagen);
   const peso = g => g.medios.length - (Date.now() - g.fecha) / (8 * 3600000);
-  const top = [...base].sort((a,b) => peso(b) - peso(a)).slice(0, 6);
+  const cuenta = {};
+  const top = [...base].sort((a,b) => peso(b) - peso(a)).filter(g => (cuenta[g.tema] = (cuenta[g.tema]||0) + 1) <= 2).slice(0, 7);
   if (!top.length){ if (grupos.length) $('.portada').hidden = true; return }
   $('.portada').hidden = false;
   const firma = top.map(g => g.notas[0].enlace).join('|');
@@ -636,6 +695,58 @@ function pintarFotos(grupos){
   $('#fotos').innerHTML = unicas.map((g,i) => `<a class="foto" data-ft href="${esc(g.notas[0].enlace)}" target="_blank" rel="noopener" style="animation-delay:${i*60}ms">${img(g.imagen, g.notas[0].titulo)}<span>${esc(g.notas[0].titulo)}</span></a>`).join('');
 }
 
+function tarjFoto(g, i=0, grande=false){
+  const p = g.notas[0], c = colorTema(g.tema);
+  return `<a class="tarj${grande?' grande':''}" href="${esc(p.enlace)}" target="_blank" rel="noopener" style="--c:${c};animation-delay:${Math.min(i,8)*50}ms">
+    <div class="ft" data-ft>${g.imagen ? img(g.imagen, p.titulo) + `<span class="credito">Foto: ${esc(g.credito)}</span>` : `<span class="letra">${esc((g.tema||'VN').slice(0,2))}</span>`}</div>
+    <div class="tx"><h3>${esc(p.titulo)}</h3><div class="meta">${ultimaVisita && g.fecha > ultimaVisita ? '<span class="nuevo">Nuevo</span>' : ''}<span class="fuente">${esc(p.fuente||'Medio')}</span><span>${hace(new Date(p.fecha))}</span>${g.medios.length>1?`<span class="medios">${g.medios.length} medios</span>`:''}</div></div>
+  </a>`;
+}
+// Primero las que tienen foto, sin dejar de lado las más nuevas
+const conFotoPrimero = l => [...l].sort((a,b) => (!!b.imagen - !!a.imagen) || (b.fecha - a.fecha));
+
+function pintarBajoCauca(grupos){
+  const l = grupos.filter(g => g.tema === 'Bajo Cauca');
+  const hoy = l.filter(esDeHoy).length;
+  $('#bc-txt').textContent = l.length ? (hoy ? plural(hoy,'noticia hoy','noticias hoy') : plural(l.length,'noticia')) : '';
+  if (!l.length){ $('#bc-lista').innerHTML = `<p class="vacio" style="grid-column:1/-1">Buscando noticias de la región… toca la lupa para buscar ya.</p>`; $('#bc-todo').hidden = true; return }
+  const recientes = l.slice(0, 7), orden = conFotoPrimero(recientes).slice(0, 5);
+  $('#bc-lista').innerHTML = orden.map((g,i) => tarjFoto(g, i, i===0 && !!g.imagen)).join('');
+  $('#bc-todo').hidden = l.length <= 5;
+  $('#bc-todo').textContent = `Ver todo el Bajo Cauca (${l.length})`;
+}
+
+let seccionSel = 'Farándula';
+function pintarSecciones(grupos){
+  $('#pestanas').innerHTML = SECCIONES.map(t => {
+    const n = grupos.filter(g => g.tema === t).length;
+    return `<button class="${t===seccionSel?'on':''}" style="--c:${colorTema(t)}" data-t="${t}"><i></i>${t} <span style="opacity:.6">${n}</span></button>`;
+  }).join('');
+  const l = grupos.filter(g => g.tema === seccionSel);
+  $('#sec-txt').textContent = l.filter(esDeHoy).length ? plural(l.filter(esDeHoy).length,'hoy','hoy') : '';
+  const muestra = conFotoPrimero(l.slice(0, 10)).slice(0, 6);
+  $('#sec-lista').innerHTML = muestra.length ? muestra.map((g,i) => tarjFoto(g, i)).join('')
+    : `<p class="vacio" style="grid-column:1/-1">Aún no hay noticias de ${esc(seccionSel)}. Toca actualizar en un momento.</p>`;
+  $('#sec-todo').hidden = l.length <= 6;
+  $('#sec-todo').style.setProperty('--c', colorTema(seccionSel));
+  $('#sec-todo').textContent = `Ver todo ${seccionSel} (${l.length})`;
+}
+$('#pestanas').onclick = e => { const b = e.target.closest('button'); if (!b) return; seccionSel = b.dataset.t; pintarSecciones(agrupar(noticias)) };
+function irATema(t){
+  tema = t; mostrar = 10; const g = agrupar(noticias); pintarChips(g); pintarLista(g);
+  $('#sec-noticias').scrollIntoView({behavior:'smooth', block:'start'});
+}
+$('#sec-todo').onclick = () => irATema(seccionSel);
+$('#bc-todo').onclick = () => irATema('Bajo Cauca');
+$('#bc-buscar').onclick = async () => {
+  const b = $('#bc-buscar'); b.classList.add('girando'); estado('Buscando en el Bajo Cauca…');
+  const antes = noticias.length;
+  const res = (await Promise.all(['Caucasia Antioquia','"Bajo Cauca"','Nechí OR "El Bagre" OR Tarazá OR Cáceres Antioquia'].map(q => rssEnVivo(`${q} when:14d`, 'Bajo Cauca')))).flat();
+  noticias = fusionar(noticias, res); pintarTodo();
+  b.classList.remove('girando'); estado('En vivo · revisado ' + horaBogota(new Date()), 'vivo');
+  toast(noticias.length > antes ? plural(noticias.length - antes, 'noticia nueva', 'noticias nuevas') + ' del Bajo Cauca' : 'Ya tienes lo último del Bajo Cauca');
+};
+
 function pintarLista(grupos){
   const buscando = tema !== 'Todas' || filtroTexto;
   const l = buscando ? grupos.filter(coincide) : grupos.filter(g => !esDeHoy(g)).concat([]);
@@ -649,7 +760,7 @@ function pintarLista(grupos){
 
 function pintarTodo(){
   const grupos = agrupar(noticias);
-  pintarTicker(grupos); pintarPortada(grupos); pintarChips(grupos); pintarHoy(grupos); pintarFotos(grupos); pintarLista(grupos);
+  pintarTicker(grupos); pintarPortada(grupos); pintarChips(grupos); pintarHoy(grupos); pintarBajoCauca(grupos); pintarSecciones(grupos); pintarFotos(grupos); pintarLista(grupos);
   contar($('#c-medios'), new Set(noticias.filter(n => Date.now() - new Date(n.fecha) < 86400000).map(n => sinTildes(n.fuente||''))).size);
 }
 
