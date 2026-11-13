@@ -255,6 +255,19 @@ details.otros[open] summary svg{transform:rotate(180deg)}
 .pestanas button.on i{background:#0a0d16}
 .ver-todo{display:block;width:100%;margin-top:10px;padding:11px;border-radius:12px;border:1px solid var(--line2);font:800 12px 'Archivo',system-ui,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:var(--txt)}
 .ver-todo:hover{border-color:var(--c)}
+/* campito El Mayordomo */
+.campo{position:relative;display:block;border-radius:var(--r);overflow:hidden;border:1px solid #3b5320;background:#0f1a0b;isolation:isolate}
+.campo img{width:100%;height:250px;object-fit:cover;object-position:50% 25%;transform-origin:60% 50%;animation:campo-zoom 14s ease-in-out infinite alternate}
+@keyframes campo-zoom{to{transform:scale(1.09)}}
+.campo::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(6,9,18,0) 40%,rgba(10,22,6,.94) 82%)}
+.campo-t{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:14px}
+.campo-t .badge{--c:#f5b400;color:#14240b}
+.campo-t h3{font:900 24px/1.05 'Archivo',system-ui,sans-serif;margin:8px 0 4px}
+.campo-t h3 em{font-style:normal;color:#f5b400}
+.campo-t p{font-size:12.5px;line-height:1.4;color:#d7e4c8}
+.campo-ir{display:inline-block;margin-top:10px;padding:9px 14px;border-radius:11px;background:#a3e635;color:#0a1405;font:800 12px 'Archivo',system-ui,sans-serif;letter-spacing:.05em;text-transform:uppercase;transition:transform .2s}
+.campo:hover .campo-ir{transform:translateX(4px)}
+@media (prefers-reduced-motion:reduce){.campo img{animation:none}}
 
 /* buscador */
 .buscar{display:flex;gap:8px;margin-bottom:12px}
@@ -362,6 +375,19 @@ footer .nota-f{font:400 11px/1.5 'Archivo',system-ui,sans-serif;letter-spacing:0
           <div class="tarjetas" id="bc-lista"><div class="sk"></div></div>
           <button class="ver-todo" id="bc-todo" style="--c:#a3e635" hidden>Ver todo el Bajo Cauca</button>
         </div>
+      </section>
+
+      <section class="sec" id="sec-campo">
+        <div class="sec-h"><h2><span class="vivo-dot" style="background:#f5b400"></span>Para el campo</h2><small>Gratis · funciona sin internet</small></div>
+        <a class="campo" href="https://pastos-mayordomia.netlify.app/?V=3" target="_blank" rel="noopener">
+          <img src="mayordomo.jpg" alt="Novillo comiendo pasto de corte en una finca colombiana" loading="lazy" width="720" height="391">
+          <div class="campo-t">
+            <span class="badge">Escuela de Mayordomía</span>
+            <h3>El <em>Mayordomo</em></h3>
+            <p>Pastos, salud animal, reproducción, ordeño y registro ganadero para la finca colombiana.</p>
+            <span class="campo-ir">Abrir la app</span>
+          </div>
+        </a>
       </section>
 
       <section class="sec" id="sec-secciones">

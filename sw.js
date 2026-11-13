@@ -1,5 +1,5 @@
 // Service worker — Vibras Noticias · Vibras Positivas HM
-const VERSION = 'vn-v2-2026-10-24';
+const VERSION = 'vn-v3-2026-11-13';
 const BASE = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', e => {
